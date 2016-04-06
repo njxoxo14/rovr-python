@@ -1,7 +1,8 @@
 # rovr
 Rovr matches dog-walkers with dog owners.  Need a dog walker?  Don't beg: use Rovr!
 
-Milestones:
+Project Milestones:
+
 1.  Initial wireframe.
 2.  Dog walker sign up page.
 3.  Dog owner sign up page.
