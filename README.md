@@ -1,12 +1,16 @@
 # rovr
 Rovr matches dog-walkers with dog owners.  Need a dog walker?  Don't beg: use Rovr!
 
-Project Milestones:
+### Project Milestones:
+
+#### Beta Release
 
 1.  Initial wireframe.
-2.  Dog walker sign up page.
-3.  Dog owner sign up page.
-4.  Dog walker: post availability page.
-5.  Dog owner: schedule walk page.
-6.  End to end test of Minimum Viable Product.
-7.  First release.
+1.  User can sign up as either dog walker or dog owner.
+1.  Dog owner cam request a dog walk.
+1.  Dog walker can accept a dog walk.
+
+#### Final Release
+
+1.  Dog walker can post availability page.
+1.  End to end test of Minimum Viable Product.
