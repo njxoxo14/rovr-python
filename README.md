@@ -7,7 +7,7 @@ Rovr matches dog-walkers with dog owners.  Need a dog walker?  Don't beg: use Ro
 
 1.  Initial wireframe.
 1.  User can sign up as either dog walker or dog owner.
-1.  Dog owner cam request a dog walk.
+1.  Dog owner can request a dog walk.
 1.  Dog walker can accept a dog walk.
 
 #### Final Release
