@@ -77,14 +77,12 @@ function updateRequests() {
       var row = $(this).closest('tr');
       requests.splice(row[0].rowIndex - 1, 1);
       row.remove();
-      console.log(requests);
     });
 
     reject.click(function() {
       var row = $(this).closest('tr');
       requests.splice(row[0].rowIndex - 1, 1);
       row.remove();
-      console.log(requests);
     });
 
     $('#requests').append(row);
