@@ -101,6 +101,7 @@ function updateWalkerSelection() {
 
 function updateRequestForm(currentUserId) {
   $('#request-confirmation').addClass(HIDDEN_CLASS);
+  $('#request').off("click");  // unbind previous event handler
   $('#request').click(function() {
     var date = $('#date').val().trim();
     var walker = $('#walker-selection').val();
