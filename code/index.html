@@ -11,81 +11,92 @@
 
   <body>
     <div class="container">
-      <div class="row">
-        <div class="col-md-12 blue h3">
-          New user registration
-        </div>
+      <div id="header" class="row">
+          <div class="col-md-12 blue">
+            <a id="home" href="index.html#">Home</a>
+          </div>
       </div>
-      <div class="row">
-        <div class="col-md-2">
-          <label for="name">Name:</label>
+      <div id="signup">
+        <div class="row">
+          <div class="col-md-12 blue h3">
+            New user registration
+          </div>
         </div>
-        <div class="col-md-5">
-          <input id="name" type="text" class="form-control"/>
+        <div class="row">
+          <div class="col-md-2">
+            <label for="name">Name:</label>
+          </div>
+          <div class="col-md-5">
+            <input id="name" type="text" class="form-control"/>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2">
-          <label for="type">I am a:</label>
+        <div class="row">
+          <div class="col-md-2">
+            <label for="type">I am a:</label>
+          </div>
+          <div class="col-md-5">
+            <label class="radio-inline">
+              <input type="radio" name="type" id="owner"/>
+              Dog owner
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="type" id="walker"/>
+              Dog walker
+            </label>
+          </div>
         </div>
-        <div class="col-md-5">
-          <label class="radio-inline">
-            <input type="radio" name="type" id="owner"/>
-            Dog owner
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="type" id="walker"/>
-            Dog walker
-          </label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-5">
-          <button id="signup" type="submit" class="btn btn-primary">Sign up</button>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12 blue h3">
-          Request a dog walker!
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2">
-          <label for="time">Time:</label>
-        </div>
-        <div class="col-md-5">
-          <input id="date" type="datetime" class="form-control"/>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2">
-          <label for="time">Dog walker:</label>
-        </div>
-        <div class="col-md-5">
-          <select id="walker-selection" class="form-control"></select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-5">
-          <button id="request" type="submit" class="btn btn-primary">Request dog walk</button>
+        <div class="row">
+          <div class="col-md-2"></div>
+          <div class="col-md-5">
+            <button id="signup-button" type="submit" class="btn btn-primary">Sign up</button>
+          </div>
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-12 blue h3">
-          Your dog walking requests.
+      <div id="owner-request">
+        <div class="row">
+          <div class="col-md-12 blue h3">
+            Request a dog walker!
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <table id="requests" class="table table-striped"></table>
+        <div class="row">
+          <div class="col-md-2">
+            <label for="time">Time:</label>
+          </div>
+          <div class="col-md-5">
+            <input id="date" type="datetime" class="form-control"/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label for="time">Dog walker:</label>
+          </div>
+          <div class="col-md-5">
+            <select id="walker-selection" class="form-control"></select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2"></div>
+          <div class="col-md-5">
+            <button id="request" type="submit" class="btn btn-primary">Request dog walk</button>
+          </div>
         </div>
       </div>
 
-      <div class="row">
+      <div id="walker-requests">
+        <div class="row">
+          <div class="col-md-12 blue h3">
+            Your dog walking requests.
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <table id="requests" class="table table-striped"></table>
+          </div>
+        </div>
+      </div>
+
+      <div id="footer" class="row">
         <div class="col-md-12 blue">
           Thanks for walking with us!
         </div>

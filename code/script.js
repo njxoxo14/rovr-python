@@ -5,12 +5,16 @@ var requests = [
   { owner: 1, walker: 2, date: '11/11/1911 - 3am' },
   { owner: 2, walker: 1, date: '5/16/2016 - 5pm' },
 ];
+var sections = ["signup", "owner-request", "walker-requests"];
 
 $(document).ready(function() {
   updateWalkerSelection();
   updateRequests();
+  showSectionOnly("signup");
 
-  $('#signup').click(function() {
+  $('#home').click($.proxy(showSectionOnly, null, "signup"));
+
+  $('#signup-button').click(function() {
     var name = $('#name').val().trim();
     var isOwner = $('#owner').is(':checked');
     var isWalker = $('#walker').is(':checked');
@@ -30,6 +34,8 @@ $(document).ready(function() {
       }
 
       updateWalkerSelection();
+      var nextSection = isOwner ? "owner-request" : "walker-requests";
+      showSectionOnly(nextSection);
     }
   });
 
@@ -51,6 +57,19 @@ $(document).ready(function() {
   });
 
 });
+
+function showSectionOnly(section) {
+  console.log('show section only:' + section);
+  var hiddenClass = 'hidden';
+  for (var i = 0; i < sections.length; i++) {
+    var tag = $('#' + sections[i]);
+    if (section == sections[i]) {
+      tag.removeClass(hiddenClass);
+    } else {
+      tag.addClass(hiddenClass);
+    }
+  }
+}
 
 function updateWalkerSelection() {
   $('#walker-selection').empty(); // Clear all options first.
