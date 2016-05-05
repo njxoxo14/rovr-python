@@ -9,6 +9,7 @@ var sections = ["signup", "owner-request", "walker-requests"];
 
 $(document).ready(function() {
   updateWalkerSelection();
+  updateUserSelection();
   updateRequests();
   showSectionOnly("signup");
 
@@ -22,20 +23,24 @@ $(document).ready(function() {
     if (name.length == 0 || !isOwner && !isWalker) {
       alert("Bad or missing input");
     } else {
-      // Reset form elements.
-      $('#name').val('');
-      $('#owner').removeAttr('checked');
-      $('#walker').removeAttr('checked');
+      resetSignup();
 
-      if (isOwner) {
-        owners.push(name);
-      } else {
-        walkers.push(name);
-      }
+      var pushInto = isOwner ? owners : walkers;
+      pushInto.push(name);
 
       updateWalkerSelection();
-      var nextSection = isOwner ? "owner-request" : "walker-requests";
-      showSectionOnly(nextSection);
+      updateUserSelection();
+      showSectionForUser(isOwner, pushInto.length - 1);
+    }
+  });
+
+  $('#user-selection').change(function() {
+    var user = $('#user-selection').val();
+    if (user.length != 0) {
+      var isOwner = user.startsWith('o');
+      var id = parseInt(user.substr(1));
+      resetSignup();
+      showSectionForUser(isOwner, id);
     }
   });
 
@@ -58,8 +63,20 @@ $(document).ready(function() {
 
 });
 
+function resetSignup() {
+  // Reset form elements.
+  $('#name').val('');
+  $('#owner').removeAttr('checked');
+  $('#walker').removeAttr('checked');
+  $('#user-selection').val('');
+}
+
+function showSectionForUser(isOwner, userId) {
+  var nextSection = isOwner ? "owner-request" : "walker-requests";
+  showSectionOnly(nextSection);
+}
+
 function showSectionOnly(section) {
-  console.log('show section only:' + section);
   var hiddenClass = 'hidden';
   for (var i = 0; i < sections.length; i++) {
     var tag = $('#' + sections[i]);
@@ -68,6 +85,21 @@ function showSectionOnly(section) {
     } else {
       tag.addClass(hiddenClass);
     }
+  }
+}
+
+function updateUserSelection() {
+  $('#user-selection').empty(); // Clear all options first.
+
+  $('#user-selection').append(
+      "<option value=''>Please select</option>");
+  for (var i = 0; i < walkers.length; i++) {
+    $('#user-selection').append(
+        "<option value='w" + i + "'>" + walkers[i] + "</option>");
+  }
+  for (var i = 0; i < owners.length; i++) {
+    $('#user-selection').append(
+        "<option value='o" + i + "'>" + owners[i] + "</option>");
   }
 }
 
