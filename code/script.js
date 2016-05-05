@@ -82,11 +82,11 @@ function updateUserSelection() {
       "<option value=''>Please select</option>");
   for (var i = 0; i < walkers.length; i++) {
     $('#user-selection').append(
-        "<option value='w" + i + "'>" + walkers[i] + "</option>");
+        "<option value='w" + i + "'>" + walkers[i] + " (Dog walker) </option>");
   }
   for (var i = 0; i < owners.length; i++) {
     $('#user-selection').append(
-        "<option value='o" + i + "'>" + owners[i] + "</option>");
+        "<option value='o" + i + "'>" + owners[i] + " (Dog owner)</option>");
   }
 }
 
