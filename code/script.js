@@ -10,7 +10,6 @@ var sections = ["signup", "owner-request", "walker-requests"];
 $(document).ready(function() {
   updateWalkerSelection();
   updateUserSelection();
-  updateRequests();
   showSectionOnly("signup");
 
   $('#home').click($.proxy(showSectionOnly, null, "signup"));
@@ -44,23 +43,6 @@ $(document).ready(function() {
     }
   });
 
-  $('#request').click(function() {
-    var date = $('#date').val().trim();
-    var walker = $('#walker-selection').val();
-    if (date.length == 0) {
-      alert("Bad or missing input");
-    } else {
-      // Reset form elements.
-      $('#date').val('');
-      $('#walker-selection').val(0);
-
-      // Assume the last added owner is the current owner.
-      var owner = owners.length - 1;
-      requests.push({ owner: owner, walker: walker, date: date });
-      updateRequests();
-    }
-  });
-
 });
 
 function resetSignup() {
@@ -72,6 +54,11 @@ function resetSignup() {
 }
 
 function showSectionForUser(isOwner, userId) {
+  if (isOwner) {
+    updateRequestForm(userId);
+  } else {
+    updateRequests(userId);
+  }
   var nextSection = isOwner ? "owner-request" : "walker-requests";
   showSectionOnly(nextSection);
 }
@@ -112,12 +99,31 @@ function updateWalkerSelection() {
   }
 }
 
-function updateRequests() {
+function updateRequestForm(currentUserId) {
+  $('#request').click(function() {
+    var date = $('#date').val().trim();
+    var walker = $('#walker-selection').val();
+    if (date.length == 0) {
+      alert("Bad or missing input");
+    } else {
+      // Reset form elements.
+      $('#date').val('');
+      $('#walker-selection').val(0);
+
+      requests.push({ owner: currentUserId, walker: walker, date: date });
+    }
+  });
+}
+
+function updateRequests(currentUserId) {
   $('#requests').empty(); // Clear the table first, then add the header.
   $('#requests').append("<tr><th>Dog owner</th><th>Date</th><th>Accept?</th></tr>");
 
   for (var i = 0; i < requests.length; i++) {
     var request = requests[i];
+    if (request.walker != currentUserId) {
+      continue;
+    }
     var name = $('<td>').text(owners[request.owner]);
     var date = $('<td>').text(request.date);
     var accept = $('<button>').addClass('btn btn-primary').text('Accept');
