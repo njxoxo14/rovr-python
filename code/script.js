@@ -1,3 +1,4 @@
+var HIDDEN_CLASS = "hidden";
 var owners = ["Joe", "Seb", "Ken"];
 var walkers = ['Danny "Dog" Doe', 'Ronny "Run" Rooney', 'Freddy "Food" Frederick'];
 var requests = [
@@ -64,13 +65,12 @@ function showSectionForUser(isOwner, userId) {
 }
 
 function showSectionOnly(section) {
-  var hiddenClass = 'hidden';
   for (var i = 0; i < sections.length; i++) {
     var tag = $('#' + sections[i]);
     if (section == sections[i]) {
-      tag.removeClass(hiddenClass);
+      tag.removeClass(HIDDEN_CLASS);
     } else {
-      tag.addClass(hiddenClass);
+      tag.addClass(HIDDEN_CLASS);
     }
   }
 }
@@ -100,6 +100,7 @@ function updateWalkerSelection() {
 }
 
 function updateRequestForm(currentUserId) {
+  $('#request-confirmation').addClass(HIDDEN_CLASS);
   $('#request').click(function() {
     var date = $('#date').val().trim();
     var walker = $('#walker-selection').val();
@@ -111,6 +112,7 @@ function updateRequestForm(currentUserId) {
       $('#walker-selection').val(0);
 
       requests.push({ owner: currentUserId, walker: walker, date: date });
+      $('#request-confirmation').removeClass(HIDDEN_CLASS);
     }
   });
 }
