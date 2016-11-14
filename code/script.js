@@ -1,17 +1,13 @@
 var HIDDEN_CLASS = "hidden";
-var owners = ["Joe", "Seb", "Ken"];
-var walkers = ['Danny "Dog" Doe', 'Ronny "Run" Rooney', 'Freddy "Food" Frederick'];
-var requests = [
-  { owner: 0, walker: 3, date: '1/1/1901 - 2pm' },
-  { owner: 1, walker: 2, date: '11/11/1911 - 3am' },
-  { owner: 2, walker: 1, date: '5/16/2016 - 5pm' },
-];
+var owners = [];
+var walkers = [];
+var requests = [];
 var sections = ["signup", "owner-request", "walker-requests"];
 
 $(document).ready(function() {
-  updateWalkerSelection();
-  updateUserSelection();
-  showSectionOnly("signup");
+  getData(function() {
+    showSectionOnly("signup");
+  });
 
   $('#home').click($.proxy(showSectionOnly, null, "signup"));
 
@@ -25,12 +21,16 @@ $(document).ready(function() {
     } else {
       resetSignup();
 
-      var pushInto = isOwner ? owners : walkers;
-      pushInto.push(name);
-
-      updateWalkerSelection();
-      updateUserSelection();
-      showSectionForUser(isOwner, pushInto.length - 1);
+      var callback = function(data) {
+        getData(function() {
+          showSectionForUser(isOwner, data);
+        });
+      }
+      if (isOwner) {
+        $.post('/create/owner', { 'name': name }, callback);
+      } else {
+        $.post('/create/walker', { 'name': name }, callback);
+      }
     }
   });
 
@@ -82,11 +82,11 @@ function updateUserSelection() {
       "<option value=''>Please select</option>");
   for (var i = 0; i < walkers.length; i++) {
     $('#user-selection').append(
-        "<option value='w" + i + "'>" + walkers[i] + " (Dog walker) </option>");
+        "<option value='w" + walkers[i].id + "'>" + walkers[i].name + " (Dog walker)</option>");
   }
   for (var i = 0; i < owners.length; i++) {
     $('#user-selection').append(
-        "<option value='o" + i + "'>" + owners[i] + " (Dog owner)</option>");
+        "<option value='o" + owners[i].id + "'>" + owners[i].name + " (Dog owner)</option>");
   }
 }
 
@@ -95,7 +95,7 @@ function updateWalkerSelection() {
 
   for (var i = 0; i < walkers.length; i++) {
     $('#walker-selection').append(
-        "<option value='" + i + "'>" + walkers[i] + "</option>");
+        "<option value='" + walkers[i].id + "'>" + walkers[i].name + "</option>");
   }
 }
 
@@ -112,7 +112,13 @@ function updateRequestForm(currentUserId) {
       $('#date').val('');
       $('#walker-selection').val(0);
 
-      requests.push({ owner: currentUserId, walker: walker, date: date });
+      $.post('/create/request', {
+          owner: currentUserId,
+          walker: walker,
+          date: date
+        }, function(data) {
+          getData();
+        });
       $('#request-confirmation').removeClass(HIDDEN_CLASS);
     }
   });
@@ -124,27 +130,59 @@ function updateRequests(currentUserId) {
 
   for (var i = 0; i < requests.length; i++) {
     var request = requests[i];
-    if (request.walker != currentUserId) {
+    if (request.walker !== currentUserId) {
       continue;
     }
-    var name = $('<td>').text(owners[request.owner]);
+    var owner;
+    for (var j = 0; j < owners.length; j++) {
+      if (owners[j].id === request.owner) {
+        owner = owners[j];
+        break;
+      }
+    }
+    var name = $('<td>').text(owner.name);
     var date = $('<td>').text(request.date);
     var accept = $('<button>').addClass('btn btn-primary').text('Accept');
     var reject = $('<button>').addClass('btn btn-primary').text('Reject');
     var row = $('<tr>').append(name, date, $('<td>').append(accept, reject));
+    row.attr('id', request.id);
 
     accept.click(function() {
       var row = $(this).closest('tr');
-      requests.splice(row[0].rowIndex - 1, 1);
-      row.remove();
+      $.post('/delete/request', {
+        'id': row.attr('id')
+      }, function() {
+        getData(function() {
+          updateRequests(currentUserId);
+        });
+      })
     });
 
     reject.click(function() {
       var row = $(this).closest('tr');
-      requests.splice(row[0].rowIndex - 1, 1);
-      row.remove();
+      $.post('/delete/request', {
+        'id': row.attr('id')
+      }, function() {
+        getData(function() {
+          updateRequests(currentUserId);
+        });
+      })
     });
 
     $('#requests').append(row);
   }
+}
+
+function getData(callback) {
+  $.getJSON('/get', success = function(data) {
+    console.log(data);
+    owners = data.owners;
+    walkers = data.walkers;
+    requests = data.requests;
+    updateWalkerSelection();
+    updateUserSelection();
+    if (callback) {
+      callback();
+    }
+  });
 }
