@@ -2,14 +2,11 @@ var HIDDEN_CLASS = "hidden";
 var owners = [];
 var walkers = [];
 var requests = [];
-var sections = ["signup", "owner-request", "walker-requests"];
 
 $(document).ready(function() {
-  getData(function() {
-    showSectionOnly("signup");
-  });
+  getData();
 
-  $('#home').click($.proxy(showSectionOnly, null, "signup"));
+  $('#home').click(function() {location.reload()});
 
   $('#signup-button').click(function() {
     var name = $('#name').val().trim();
@@ -22,9 +19,7 @@ $(document).ready(function() {
       resetSignup();
 
       var callback = function(data) {
-        getData(function() {
-          showSectionForUser(isOwner, data);
-        });
+        location.reload()
       }
       if (isOwner) {
         $.post('/create/owner', { 'name': name }, callback);
@@ -33,17 +28,6 @@ $(document).ready(function() {
       }
     }
   });
-
-  $('#user-selection').change(function() {
-    var user = $('#user-selection').val();
-    if (user.length != 0) {
-      var isOwner = user.startsWith('o');
-      var id = parseInt(user.substr(1));
-      resetSignup();
-      showSectionForUser(isOwner, id);
-    }
-  });
-
 });
 
 function resetSignup() {
@@ -54,48 +38,12 @@ function resetSignup() {
   $('#user-selection').val('');
 }
 
-function showSectionForUser(isOwner, userId) {
-  if (isOwner) {
-    updateRequestForm(userId);
-  } else {
-    updateRequests(userId);
-  }
-  var nextSection = isOwner ? "owner-request" : "walker-requests";
-  showSectionOnly(nextSection);
-}
-
-function showSectionOnly(section) {
-  for (var i = 0; i < sections.length; i++) {
-    var tag = $('#' + sections[i]);
-    if (section == sections[i]) {
-      tag.removeClass(HIDDEN_CLASS);
-    } else {
-      tag.addClass(HIDDEN_CLASS);
-    }
-  }
-}
-
-function updateUserSelection() {
-  $('#user-selection').empty(); // Clear all options first.
-
-  $('#user-selection').append(
-      "<option value=''>Please select</option>");
-  for (var i = 0; i < walkers.length; i++) {
-    $('#user-selection').append(
-        "<option value='w" + walkers[i].id + "'>" + walkers[i].name + " (Dog walker)</option>");
-  }
-  for (var i = 0; i < owners.length; i++) {
-    $('#user-selection').append(
-        "<option value='o" + owners[i].id + "'>" + owners[i].name + " (Dog owner)</option>");
-  }
-}
-
 function updateWalkerSelection() {
   $('#walker-selection').empty(); // Clear all options first.
 
   for (var i = 0; i < walkers.length; i++) {
     $('#walker-selection').append(
-        "<option value='" + walkers[i].id + "'>" + walkers[i].name + "</option>");
+        "<option value='" + walkers[i].email + "'>" + walkers[i].name + "</option>");
   }
 }
 
@@ -117,7 +65,7 @@ function updateRequestForm(currentUserId) {
           walker: walker,
           date: date
         }, function(data) {
-          getData();
+          setTimeout(location.reload.bind(location), 2000);
         });
       $('#request-confirmation').removeClass(HIDDEN_CLASS);
     }
@@ -152,9 +100,7 @@ function updateRequests(currentUserId) {
       $.post('/delete/request', {
         'id': row.attr('id')
       }, function() {
-        getData(function() {
-          updateRequests(currentUserId);
-        });
+        setTimeout(location.reload.bind(location), 2000);
       })
     });
 
@@ -163,9 +109,7 @@ function updateRequests(currentUserId) {
       $.post('/delete/request', {
         'id': row.attr('id')
       }, function() {
-        getData(function() {
-          updateRequests(currentUserId);
-        });
+        setTimeout(location.reload.bind(location), 2000);
       })
     });
 
@@ -180,7 +124,8 @@ function getData(callback) {
     walkers = data.walkers;
     requests = data.requests;
     updateWalkerSelection();
-    updateUserSelection();
+    updateRequestForm();
+    updateRequests();
     if (callback) {
       callback();
     }

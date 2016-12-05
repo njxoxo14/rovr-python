@@ -1,13 +1,8 @@
-application: scripted-rovr
-version: 1
 runtime: python27
 api_version: 1
 threadsafe: true
 
 handlers:
-- url: /(index.html)?
-  static_files: index.html
-  upload: index\.html
 - url: /script\.js
   static_files: script.js
   upload: script\.js
