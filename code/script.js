@@ -43,7 +43,7 @@ function updateWalkerSelection() {
 
   for (var i = 0; i < walkers.length; i++) {
     $('#walker-selection').append(
-        "<option value='" + walkers[i].email + "'>" + walkers[i].name + "</option>");
+        "<option value='" + walkers[i].id + "'>" + walkers[i].name + "</option>");
   }
 }
 
@@ -125,7 +125,7 @@ function getData(callback) {
     requests = data.requests;
     updateWalkerSelection();
     updateRequestForm();
-    updateRequests();
+    updateRequests(data.user_id);
     if (callback) {
       callback();
     }
