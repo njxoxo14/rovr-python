@@ -3,9 +3,21 @@ from webapp2_extras import json
 import cgi
 import urllib
 import webapp2
+from google.appengine.ext.webapp.util import login_required
+from google.appengine.api import users
+import jinja2
+import os
+
+JINJA_ENVIRONMENT = jinja2.Environment(
+    		loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    		extensions=['jinja2.ext.autoescape'],
+    		autoescape=True)
+
+#JINJA_ENVIRONMENT.get_template(<template>).render(<param>)
 
 class DogWalker(ndb.Model):
     name = ndb.StringProperty()
+    email = ndb.StringProperty()
     def to_json(self):
         return {
             'id': self.key.id(),
@@ -14,6 +26,7 @@ class DogWalker(ndb.Model):
 
 class DogOwner(ndb.Model):
     name = ndb.StringProperty()
+    email = ndb.StringProperty()
     def to_json(self):
         return {
             'id': self.key.id(),
@@ -38,6 +51,10 @@ class CreateOwner(webapp2.RequestHandler):
         owner = DogOwner(name=requested_name)
         owner.put()
         return self.response.out.write(owner.key.id())
+        user = users.get_current_user()
+        requested_name = self.request.get('name')
+        owner = DogOwner(email=user.email(),name=requested_name)
+
 
 class CreateWalker(webapp2.RequestHandler):
     def post(self):
@@ -45,6 +62,10 @@ class CreateWalker(webapp2.RequestHandler):
         walker = DogWalker(name=requested_name)
         walker.put()
         return self.response.out.write(walker.key.id())
+        user = users.get_current_user()
+        requested_name = self.request.get('name')
+        owner = DogOwner(email=user.email(),name=requested_name)
+
 
 class CreateRequest(webapp2.RequestHandler):
     def post(self):
@@ -73,6 +94,20 @@ class GetAllData(webapp2.RequestHandler):
         }
         return self.response.out.write(json.encode(data))
 
+class Greet(webapp2.RequestHandler):
+    @login_required
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('index.html')
+        user = users.get_current_user()
+        params = {
+          'nickname': user.nickname()
+        }
+        self.response.write(template.render(params))
+'''    def get(self):
+        user = users.get_current_user()
+        self.response.write("Hi, " + user.email() + "!")
+'''
+
 
 app = webapp2.WSGIApplication([
     ('/create/walker', CreateWalker),
@@ -80,4 +115,5 @@ app = webapp2.WSGIApplication([
     ('/create/request', CreateRequest),
     ('/delete/request', DeleteRequest),
     ('/get', GetAllData),
+    ('/', Greet),
 ])
